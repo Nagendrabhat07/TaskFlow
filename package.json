@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@arcmatic/sdk": "file:../../A.R.C.M.A.T.I.C/SDK/arcmatic-sdk-1.0.1.tgz"
+  }
+}

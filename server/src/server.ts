@@ -68,19 +68,20 @@ app.use(errorHandler);
 const PORT = parseInt(process.env.PORT || '5000', 10);
 
 if (process.env.NODE_ENV !== 'test') {
-  const startServer = async () => {
-    await connectDB();
+  // Connect to the database globally so serverless functions can use it
+  connectDB().catch((err) => {
+    console.error('Failed to connect to database:', err);
+    process.exit(1);
+  });
+
+  // Only start the Express listener if we are not in a serverless environment like Vercel
+  if (!process.env.VERCEL) {
     app.listen(PORT, () => {
       console.log(`\n🚀 TaskFlow API server running on port ${PORT}`);
       console.log(`📡 Environment: ${process.env.NODE_ENV || 'development'}`);
       console.log(`🌐 Client URL: ${process.env.CLIENT_URL || 'http://localhost:5173'}\n`);
     });
-  };
-
-  startServer().catch((err) => {
-    console.error('Failed to start server:', err);
-    process.exit(1);
-  });
+  }
 }
 
 export { app };
